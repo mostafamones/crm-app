@@ -1,14 +1,15 @@
-import path from "node:path"
 import "dotenv/config"
-import { PrismaClient } from "../src/generated/prisma"
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import {
+  PrismaClient,
+  Role,
+  LeadStatus,
+  DealStatus,
+} from "../src/generated/prisma/client"
+import { PrismaPg } from "@prisma/adapter-pg"
 import bcrypt from "bcryptjs"
 
-const databaseUrl = `file:${path.join(process.cwd(), "prisma", "dev.db")}`
-const adapter = new PrismaBetterSqlite3({ url: databaseUrl })
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! })
 const prisma = new PrismaClient({ adapter })
-
-import { Role, LeadStatus, DealStatus } from "../src/generated/prisma"
 
 async function main() {
   // ── Clean existing data (order matters for FK constraints) ────────────────

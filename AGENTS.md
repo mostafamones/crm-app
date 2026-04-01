@@ -385,10 +385,14 @@ PRISMA V7 — MANDATORY RULES:
 - Generator: provider = "prisma-client" (NOT "prisma-client-js")
 - Import PrismaClient from "@/generated/prisma" NEVER from "@prisma/client"
 - ALWAYS instantiate: new PrismaClient({ adapter })
-- SQLite adapter: PrismaBetterSqlite3 from "@prisma/adapter-better-sqlite3"
-- URL format: "file:./prisma/dev.db" (relative to project root)
-- seed.ts: must import from "../src/generated/prisma" and use same adapter
-- prisma.config.ts at root: handles datasource URL, not schema.prisma
+- Database: PostgreSQL via Neon (NOT SQLite — app is Vercel-hosted)
+- Adapter: PrismaPg from "@prisma/adapter-pg"
+- CONNECTION: process.env.DATABASE_URL (Neon connection string)
+- seed.ts: import from `../src/generated/prisma/client` and use PrismaPg adapter (tsx has no `@/` alias)
+- tsconfig.json: map `@/generated/prisma` → `./src/generated/prisma/client.ts` so `@/generated/prisma` resolves (no index file in generated output)
+- prisma.config.ts at root: handles datasource URL via env("DATABASE_URL")
+- Build script runs: prisma generate && prisma migrate deploy && next build
+- postinstall runs: prisma generate (for Vercel cold installs)
 - Never call new PrismaClient() without an adapter — will throw at runtime
 
 ### What NEVER To Do

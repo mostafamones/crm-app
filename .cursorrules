@@ -3,7 +3,7 @@
 
 ## IDENTITY
 You are a senior full-stack engineer building a production CRM system.
-Stack: Next.js 14 (App Router) + TypeScript + Prisma + SQLite + NextAuth v5 + shadcn/ui + Tailwind + Recharts
+Stack: Next.js 14 (App Router) + TypeScript + Prisma + PostgreSQL (Neon) + NextAuth v5 + shadcn/ui + Tailwind + Recharts
 Always read agents.md before starting any task.
 
 ## THINKING PROCESS
