@@ -11,3 +11,89 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
+
+enum Role {
+  ADMIN
+  SALES_MANAGER
+  SALES_REP
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  LOST
+}
+
+enum DealStatus {
+  NEW_LEAD
+  CONTACTED
+  PROPOSAL
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         Role          @default(SALES_REP)
+  status       String        @default("active")
+  createdAt    DateTime      @default(now())
+  leads        Lead[]
+  deals        Deal[]
+  reports      SalesReport[]
+}
+
+model Lead {
+  id              String      @id @default(cuid())
+  name            String
+  source          String
+  status          LeadStatus  @default(NEW)
+  createdAt       DateTime    @default(now())
+  lastContactDate DateTime?
+  ownerId         String
+  owner           User        @relation(fields: [ownerId], references: [id])
+  deal            Deal?
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  name        String
+  companyName String
+  email       String
+  phone       String?
+  address     String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  deals       Deal[]
+}
+
+model Deal {
+  id                String     @id @default(cuid())
+  title             String
+  amount            Float
+  status            DealStatus @default(NEW_LEAD)
+  probability       Int        @default(0)
+  createdAt         DateTime   @default(now())
+  expectedCloseDate DateTime?
+  assignedToId      String
+  assignedTo        User       @relation(fields: [assignedToId], references: [id])
+  customerId        String?
+  customer          Customer?  @relation(fields: [customerId], references: [id])
+  leadId            String?    @unique
+  lead              Lead?      @relation(fields: [leadId], references: [id])
+}
+
+model SalesReport {
+  id             String   @id @default(cuid())
+  startDate      DateTime
+  endDate        DateTime
+  totalDeals     Int
+  closedDeals    Int
+  conversionRate Float
+  generatedById  String
+  generatedBy    User     @relation(fields: [generatedById], references: [id])
+  createdAt      DateTime @default(now())
+}

@@ -1,0 +1,50 @@
+# Cursor Rules — CRM System
+# Read agents.md first. This file enforces rules at the agent level.
+
+## IDENTITY
+You are a senior full-stack engineer building a production CRM system.
+Stack: Next.js 14 (App Router) + TypeScript + Prisma + SQLite + NextAuth v5 + shadcn/ui + Tailwind + Recharts
+Always read agents.md before starting any task.
+
+## THINKING PROCESS
+Before writing any code, think through:
+1. What files need to be created or modified?
+2. What types are needed? Do they exist in src/types/index.ts?
+3. What are the role/permission requirements for this feature?
+4. What are the error cases? Empty states? Loading states?
+5. Is this a server or client component?
+
+## ABSOLUTE RULES
+- TypeScript strict — zero `any` types
+- Never expose passwordHash in any API response (use select to exclude it)
+- Always get current user from session — never trust client-sent user IDs
+- Every API route must check authentication first
+- Every mutation API route must check authorization (role)
+- Always use the Prisma singleton from @/lib/prisma
+- Never modify src/components/ui/ files
+- Server components by default — `use client` only when necessary
+
+## FILE CREATION RULES
+- One component per file
+- Types go in src/types/index.ts
+- Shared utilities go in src/lib/utils.ts
+- All API routes follow: authenticate → authorize → validate → execute → respond
+
+## RESPONSE FORMAT
+All API routes return:
+- Success: { data: T } with status 200/201
+- Error: { error: string } with status 400/401/403/404/500
+
+## UI RULES
+- Use shadcn/ui components exclusively for UI elements
+- Every table needs: loading skeleton, empty state, error state
+- Every form needs: validation, loading button state, error display
+- Every page needs: proper title, breadcrumb if nested
+- Status badges must use the color mapping from agents.md
+- Mobile responsive at all times (min-width: 375px)
+
+## WHAT GOOD LOOKS LIKE
+- A completed feature works fully: UI renders → form submits → API validates → DB updates → UI refreshes
+- Role restrictions work: manager sees team data, rep sees own data, admin sees all
+- No broken states: loading, empty, error are all handled
+- Code is clean: no unused imports, no console.logs, no TODOs
