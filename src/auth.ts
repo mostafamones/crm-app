@@ -4,9 +4,19 @@ import bcrypt from "bcryptjs"
 import type { UserRole } from "@/types"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt" },
-  pages: { signIn: "/login" },
   trustHost: true,
+  secret: process.env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+      name: `__Secure-authjs.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: true,
+      },
+    },
+  },
   providers: [
     Credentials({
       credentials: {
@@ -46,6 +56,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user?.id && user.role) {
@@ -61,5 +74,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session
     },
+  },
+  pages: {
+    signIn: "/login",
   },
 })

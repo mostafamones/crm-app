@@ -2,16 +2,22 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { getToken } from "next-auth/jwt"
 
-const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
+const secret = process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
 
+/** Edge-safe: avoids bundling Prisma with `auth as middleware` + Credentials DB lookup. */
 export async function middleware(request: NextRequest) {
   if (!secret) {
-    throw new Error("Missing AUTH_SECRET or NEXTAUTH_SECRET")
+    throw new Error("Missing NEXTAUTH_SECRET or AUTH_SECRET")
+  }
+
+  const { pathname } = request.nextUrl
+
+  if (!pathname.startsWith("/dashboard") && pathname !== "/login") {
+    return NextResponse.next()
   }
 
   const token = await getToken({ req: request, secret })
   const isLoggedIn = !!token
-  const { pathname } = request.nextUrl
 
   if (pathname.startsWith("/dashboard") && !isLoggedIn) {
     return NextResponse.redirect(new URL("/login", request.nextUrl))
@@ -25,5 +31,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 }
