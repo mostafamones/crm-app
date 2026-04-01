@@ -2,12 +2,12 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { getToken } from "next-auth/jwt"
 
-const secret = process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
+const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
 
 /** Edge-safe: avoids bundling Prisma with `auth as middleware` + Credentials DB lookup. */
 export async function middleware(request: NextRequest) {
   if (!secret) {
-    throw new Error("Missing NEXTAUTH_SECRET or AUTH_SECRET")
+    throw new Error("Missing AUTH_SECRET or NEXTAUTH_SECRET")
   }
 
   const { pathname } = request.nextUrl

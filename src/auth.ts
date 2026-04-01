@@ -5,18 +5,7 @@ import type { UserRole } from "@/types"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
-  secret: process.env.NEXTAUTH_SECRET,
-  cookies: {
-    sessionToken: {
-      name: `__Secure-authjs.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: true,
-      },
-    },
-  },
+  secret: process.env.AUTH_SECRET,
   providers: [
     Credentials({
       credentials: {
