@@ -7,11 +7,11 @@ export function cn(...inputs: ClassValue[]) {
 
 /** Base URL for server-side fetch to this app (e.g. internal API routes). */
 export function getAppBaseUrl(): string {
-  if (process.env.NEXTAUTH_URL) {
-    return process.env.NEXTAUTH_URL.replace(/\/$/, "")
+  if (process.env.AUTH_URL) {
+    return process.env.AUTH_URL.replace(/\/$/, "")
   }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`
+  if (process.env.AUTH_URL) {
+    return `https://${process.env.AUTH_URL.replace(/\/$/, "")}`
   }
   return "http://localhost:3000"
 }
