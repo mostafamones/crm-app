@@ -6,13 +6,23 @@ A full-stack CRM web application for small and medium businesses. Manage leads, 
 
 ---
 
+## Tools Used
+
+| Purpose | Tool |
+|---|---|
+| Planning | Claude |
+| Coding Agent | Cursor |
+| Coding Agent | Codex |
+
+---
+
 ## Stack
 
 | | |
 |---|---|
 | Framework | Next.js 14 (App Router) |
 | Language | TypeScript |
-| Database | SQLite + Prisma ORM v7 |
+| Database | PostgreSQL (Neon) + Prisma ORM v7 |
 | Auth | NextAuth.js v5 |
 | UI | shadcn/ui + Tailwind CSS |
 | Charts | Recharts |
@@ -30,6 +40,8 @@ A full-stack CRM web application for small and medium businesses. Manage leads, 
 - **Reports** — Charts, conversion rates, revenue summaries *(Manager/Admin)*
 - **Users** — Create and manage system users *(Admin only)*
 - **Dashboard** — Role-aware KPIs, funnel chart, recent deals
+- **Architecture Docs** — Mermaid ERD and DFD diagrams in [`docs/architecture.md`](./docs/architecture.md)
+- **Showcase Mode** — Launch the app and open it automatically with `npm run showcase`
 
 ---
 
@@ -51,12 +63,20 @@ git clone https://github.com/your-username/crm-app.git
 cd crm-app
 npm install
 npx prisma generate
-npx prisma db push
+npx prisma migrate deploy
 npm run seed
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
+
+Or run:
+
+```bash
+npm run showcase
+```
+
+This starts the Next.js dev server and opens `http://localhost:3000` automatically in your browser.
 
 ---
 
@@ -73,10 +93,19 @@ Open [http://localhost:3000](http://localhost:3000)
 ## Environment Variables
 
 ```env
-DATABASE_URL="file:./prisma/dev.db"
+DATABASE_URL="your-neon-postgres-connection-string"
 NEXTAUTH_SECRET="your-secret-key-here"
 NEXTAUTH_URL="http://localhost:3000"
 ```
+
+---
+
+## Architecture
+
+The project architecture diagrams are documented in [`docs/architecture.md`](./docs/architecture.md):
+
+- ERD (Entity Relationship Diagram)
+- DFD (Data Flow Diagram)
 
 ---
 
